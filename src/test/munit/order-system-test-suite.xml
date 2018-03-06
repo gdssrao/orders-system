@@ -21,4 +21,12 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
             <munit:assert-on-equals expectedValue="#['internantional']" actualValue="#[message.payload.'location']" doc:name="Assert Equals"/>
         </foreach>
     </munit:test>
+    <munit:test name="processOrders_domesticKey_returns_orders" description="processOrders InternantionalKey returns two element map">
+        <munit:set payload="#[[{'orderID':444, 'location':'international','price':14.01}, {'orderID':444, 'location':'international','price':14.01}, {'orderID':555, 'location':'domestic','price':14.01}]]" doc:name="Set Message"/>
+        <flow-ref name="processOrderFlow" doc:name="processOrders"/>
+        <munit:assert-true condition="#[message.payload.'domestic'.size()&gt;0]" doc:name="Assert True"/>
+        <foreach collection="#[payload.'domestic']" doc:name="For Each">
+            <munit:assert-on-equals expectedValue="#['domestic']" actualValue="#[message.payload.'location']" doc:name="Assert Equals"/>
+        </foreach>
+    </munit:test>
 </mule>
